@@ -1,0 +1,53 @@
+﻿@model IEnumerable<FatherGolf.Models.Golfer>
+
+@{
+    ViewData["Title"] = "ViewGolfers";
+}
+
+<h1>Father's Of Foreplay</h1>
+
+<button>
+    <a asp-action="AddGolfer">Create New Golfer</a>
+</button>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Firstname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lastname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Handicap)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Totalrounds)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Firstname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lastname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Handicap)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Totalrounds)
+            </td>
+            <td>
+                <a asp-action="UpdateGolfer" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="DeleteGolfer" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
