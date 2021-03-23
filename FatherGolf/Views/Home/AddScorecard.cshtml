@@ -1,0 +1,74 @@
+﻿@model FatherGolf.Models.GolfScoreCard
+
+@{
+    ViewData["Title"] = "AddScorecard";
+}
+
+<div class="alert-dark">
+    <h1><strong>This Is Golf Mr.Gilmore</strong></h1>
+    <hr />
+    <h2 class="alert-danger"> @ViewBag.NotEnoughInfo</h2>
+    <form action="/Home/AddScorecard" method="post">
+        <h6>Course Name:</h6>
+        <input name="CourseName" type="text" />
+        <h6>Player Name:</h6>
+        <input name="PlayerName" value="Player" type="text" />
+        @*<p>Player Name: <input  name="Player" type="text"/></p>*@
+        <div>
+            <h6>Number of holes</h6>
+            <label>9</label>
+            <input type="radio" id="9" name="played" value="9" /><br />
+            <label>18</label>
+            <input type="radio" id="18" name="played" value="18" checked="checked" /><br />
+
+        </div>
+        <h6>Scores</h6>
+
+        <table class="table-dark">
+            <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+                <td>15</td>
+                <td>16</td>
+                <td>17</td>
+                <td>18</td>
+            </tr>
+            <tr>
+                <th><p><input name="Hole1" type="text" size="2" /></p></th>
+                <th><p><input name="Hole2" type="text" size="2" /></p></th>
+                <th><p><input name="Hole3" type="text" size="2" /></p></th>
+                <th><p><input name="Hole4" type="text" size="2" /></p></th>
+                <th><p><input name="Hole5" type="text" size="2" /></p></th>
+                <th><p><input name="Hole6" type="text" size="2" /></p></th>
+                <th><p><input name="Hole7" type="text" size="2" /></p></th>
+                <th><p><input name="Hole8" type="text" size="2" /></p></th>
+                <th><p><input name="Hole9" type="text" size="2" /></p></th>
+                <th><p><input name="Hole10" type="text" size="2" /></p></th>
+                <th><p><input name="Hole11" type="text" size="2" /></p></th>
+                <th><p><input name="Hole12" type="text" size="2" /></p></th>
+                <th><p><input name="Hole13" type="text" size="2" /></p></th>
+                <th><p><input name="Hole14" type="text" size="2" /></p></th>
+                <th><p><input name="Hole15" type="text" size="2" /></p></th>
+                <th><p><input name="Hole16" type="text" size="2" /></p></th>
+                <th><p><input name="Hole17" type="text" size="2" /></p></th>
+                <th><p><input name="Hole18" type="text" size="2" /></p></th>
+            </tr>
+        </table>
+        <input type="submit" value="Hit the 19th Hole" />
+    </form>
+    @Html.ActionLink("Go See John", "Index", "Home")
+</div>
+
+

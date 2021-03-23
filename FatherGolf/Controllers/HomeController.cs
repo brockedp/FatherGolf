@@ -33,6 +33,107 @@ namespace FatherGolf.Controllers
             return View(theGripper);
         }
 
+
+        #region Scorecard
+        public IActionResult DisplayAllRounds()
+        {
+            List<GolfScoreCard> scorecards = new List<GolfScoreCard>();
+            scorecards = _context.GolfScoreCards.ToList();
+
+            return View(scorecards);
+        }
+
+       
+
+        public IActionResult AddScorecard()
+        {
+            List<Golfer> golfers = _context.Golfers.ToList();
+
+            return View(golfers);
+
+        }
+        [HttpPost]
+        public IActionResult AddScorecard(GolfScoreCard newGolfScorecard, string played)
+        {
+           
+            if (ModelState.IsValid)
+            {
+                if (newGolfScorecard.CourseName != null && newGolfScorecard.PlayerName != null)
+                {
+                    if (played == "18")
+                    {
+                        newGolfScorecard.Total = newGolfScorecard.Hole1 + newGolfScorecard.Hole2 + newGolfScorecard.Hole3 + newGolfScorecard.Hole4 +
+                           newGolfScorecard.Hole5 + newGolfScorecard.Hole6 + newGolfScorecard.Hole7 + newGolfScorecard.Hole8 + newGolfScorecard.Hole9 +
+                           newGolfScorecard.Hole10 + newGolfScorecard.Hole11 + newGolfScorecard.Hole12 + newGolfScorecard.Hole13 + newGolfScorecard.Hole14 +
+                           newGolfScorecard.Hole15 + newGolfScorecard.Hole16 + newGolfScorecard.Hole17 + newGolfScorecard.Hole18;
+                    }
+                    else
+                    {
+                        if (newGolfScorecard.Hole1 != null)
+                        {
+                            newGolfScorecard.Total = newGolfScorecard.Hole1 + newGolfScorecard.Hole2 + newGolfScorecard.Hole3 + newGolfScorecard.Hole4 +
+                          newGolfScorecard.Hole5 + newGolfScorecard.Hole6 + newGolfScorecard.Hole7 + newGolfScorecard.Hole8 + newGolfScorecard.Hole9;
+                            newGolfScorecard.Hole10 = 0;
+                            newGolfScorecard.Hole11 = 0;
+                            newGolfScorecard.Hole12 = 0;
+                            newGolfScorecard.Hole13 = 0;
+                            newGolfScorecard.Hole14 = 0;
+                            newGolfScorecard.Hole15 = 0;
+                            newGolfScorecard.Hole16 = 0;
+                            newGolfScorecard.Hole17 = 0;
+                            newGolfScorecard.Hole18 = 0;
+                        }
+                        else
+                        {
+                            newGolfScorecard.Total = newGolfScorecard.Hole10 + newGolfScorecard.Hole11 + newGolfScorecard.Hole12 + newGolfScorecard.Hole13 + newGolfScorecard.Hole14 +
+                        newGolfScorecard.Hole15 + newGolfScorecard.Hole16 + newGolfScorecard.Hole17 + newGolfScorecard.Hole18;
+                            newGolfScorecard.Hole1 = 0;
+                            newGolfScorecard.Hole2 = 0;
+                            newGolfScorecard.Hole3 = 0;
+                            newGolfScorecard.Hole4 = 0;
+                            newGolfScorecard.Hole5 = 0;
+                            newGolfScorecard.Hole6 = 0;
+                            newGolfScorecard.Hole7 = 0;
+                            newGolfScorecard.Hole8 = 0;
+                            newGolfScorecard.Hole9 = 0;
+                        }
+                    }
+
+                    newGolfScorecard.Date = DateTime.Now.ToShortDateString();
+                    _context.Add(newGolfScorecard);
+                    _context.SaveChanges();
+                    return RedirectToAction("DisplayAllRounds");
+                }
+                else
+                {
+                    ViewBag.NotEnoughInfo = "You did not have a player name or course name";
+                    return View("AddScorecard");
+                }
+            }
+            else
+            {
+                return View("AddScorecard");
+            }
+        }
+
+        public IActionResult DeleteScorecard(int id)
+        {
+            GolfScoreCard found = _context.GolfScoreCards.Find(id);
+            if (ModelState.IsValid && found != null)
+            {
+                _context.Remove(found);
+                _context.SaveChanges();
+                return RedirectToAction("DisplayAllRounds");
+              //todo - associate player id with scorecard
+              //todo - update players total rounds when deleting a scorecard
+            }
+            else
+            {
+                return RedirectToAction("DisplayAllRounds");
+            }
+        }
+        #endregion
+        #region Golfer
         public IActionResult ViewGolfers()
         {
             List<Golfer> golfers = new List<Golfer>();
@@ -105,6 +206,8 @@ namespace FatherGolf.Controllers
             return RedirectToAction("ViewGolfers");
 
         }
+
+        #endregion
         public IActionResult Privacy()
         {
             return View();
