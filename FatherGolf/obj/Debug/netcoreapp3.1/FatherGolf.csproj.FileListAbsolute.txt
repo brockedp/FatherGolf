@@ -156,3 +156,6 @@ C:\Users\denob\Documents\FatherGolf\FatherGolf\bin\Debug\netcoreapp3.1\System.Ne
 C:\Users\denob\Documents\FatherGolf\FatherGolf\bin\Debug\netcoreapp3.1\Newtonsoft.Json.Bson.dll
 C:\Users\denob\Documents\FatherGolf\FatherGolf\obj\Debug\netcoreapp3.1\Razor\Views\Home\AddScorecard.cshtml.g.cs
 C:\Users\denob\Documents\FatherGolf\FatherGolf\obj\Debug\netcoreapp3.1\Razor\Views\Home\DisplayAllRounds.cshtml.g.cs
+C:\Users\denob\Documents\FatherGolf\FatherGolf\obj\Debug\netcoreapp3.1\Razor\Views\Home\AddCourse.cshtml.g.cs
+C:\Users\denob\Documents\FatherGolf\FatherGolf\obj\Debug\netcoreapp3.1\Razor\Views\Home\ViewCourses.cshtml.g.cs
+C:\Users\denob\Documents\FatherGolf\FatherGolf\obj\Debug\netcoreapp3.1\Razor\Views\Home\UpdateCourse.cshtml.g.cs

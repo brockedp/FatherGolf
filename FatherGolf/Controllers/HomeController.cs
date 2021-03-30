@@ -208,6 +208,72 @@ namespace FatherGolf.Controllers
         }
 
         #endregion
+        #region Course
+
+        public IActionResult ViewCourses()
+        {
+            List<Course> Courses = new List<Course>();
+            Courses = _context.Courses.ToList();
+
+            return View(Courses);
+        }
+
+        public IActionResult AddCourse()
+        {
+            return View();
+
+        }
+        [HttpPost]
+        public IActionResult AddCourse(Course Course)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(Course);
+                _context.SaveChanges();
+                return RedirectToAction("ViewCourses");
+            }
+            else
+            {
+                return View("ViewCourses");
+            }
+        }
+
+        public IActionResult UpdateCourse(int id)
+        {
+            Course found = _context.Courses.Find(id);
+            if (found != null)
+            {
+                return View(found);
+            }
+            else
+            {
+                return RedirectToAction("ViewCourses");
+            }
+        }
+        [HttpPost]
+        public IActionResult UpdateCourse(Course Course)
+        {
+            Course found = _context.Courses.Find(Course.Id);
+            if (ModelState.IsValid && found != null)
+            {
+                found.Id = Course.Id;
+                found.Name = Course.Name;
+                found.FrontNinePar = Course.FrontNinePar;
+                found.BackNinePar = Course.BackNinePar;
+                found.Par = Course.Par;
+                found.Slope = Course.Par;
+                found.PhoneNumber = Course.PhoneNumber;
+                found.Address = Course.Address;
+
+                _context.Entry(found).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Update(found);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("ViewCourses");
+        }
+
+
+        #endregion
         public IActionResult Privacy()
         {
             return View();

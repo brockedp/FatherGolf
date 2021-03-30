@@ -17,6 +17,7 @@ namespace FatherGolf.Models
         {
         }
 
+        public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<GolfScoreCard> GolfScoreCards { get; set; }
         public virtual DbSet<Golfer> Golfers { get; set; }
 
@@ -33,6 +34,17 @@ namespace FatherGolf.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
+            modelBuilder.Entity<Course>(entity =>
+            {
+                entity.Property(e => e.Address).HasMaxLength(300);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(150);
+
+                entity.Property(e => e.PhoneNumber).HasMaxLength(30);
+            });
+
             modelBuilder.Entity<GolfScoreCard>(entity =>
             {
                 entity.ToTable("GolfScoreCard");
@@ -46,11 +58,9 @@ namespace FatherGolf.Models
 
             modelBuilder.Entity<Golfer>(entity =>
             {
-                //entity.HasNoKey();
+                entity.HasNoKey();
 
                 entity.ToTable("Golfer");
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
 
                 entity.Property(e => e.Firstname)
                     .IsRequired()
