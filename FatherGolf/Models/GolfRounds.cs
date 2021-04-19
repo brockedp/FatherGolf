@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-
-#nullable disable
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FatherGolf.Models
 {
-    public partial class GolfScoreCard
+    public class GolfRounds
     {
         public int Id { get; set; }
-        public int? CourseId { get; set; }
-        public int? PlayerId { get; set; }
+        public string CourseName { get; set; }
+        public int CourseId { get; set; }
+        public string PlayerName { get; set; }
+        public string PlayerId{ get; set; }
         public int? Hole1 { get; set; }
         public int? Hole2 { get; set; }
         public int? Hole3 { get; set; }

@@ -47,13 +47,13 @@ namespace FatherGolf.Models
 
             modelBuilder.Entity<GolfScoreCard>(entity =>
             {
-                entity.ToTable("GolfScoreCard");
+                entity.HasNoKey();
 
-                entity.Property(e => e.CourseName).HasMaxLength(100);
+                entity.ToTable("GolfScoreCard");
 
                 entity.Property(e => e.Date).HasMaxLength(20);
 
-                entity.Property(e => e.PlayerName).HasMaxLength(100);
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
             });
 
             modelBuilder.Entity<Golfer>(entity =>

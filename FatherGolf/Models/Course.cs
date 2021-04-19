@@ -15,5 +15,6 @@ namespace FatherGolf.Models
         public int Slope { get; set; }
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
+        public double? CourseRating { get; set; }
     }
 }

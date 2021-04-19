@@ -28,6 +28,9 @@
                 @Html.DisplayNameFor(model => model.Slope)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.CourseRating)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Address)
             </th>
             <th>
@@ -55,6 +58,9 @@
                 @Html.DisplayFor(modelItem => item.Slope)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.CourseRating)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Address)
             </td>
             <td>
@@ -62,7 +68,7 @@
             </td>
             <td>
                 <a asp-action="UpdateCourse" asp-route-id="@item.Id">Edit</a> |
-              @*  <a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
+                @*  <a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
                 @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
             </td>
         </tr>

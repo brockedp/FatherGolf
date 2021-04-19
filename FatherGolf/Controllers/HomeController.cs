@@ -43,13 +43,14 @@ namespace FatherGolf.Controllers
             return View(scorecards);
         }
 
-       
-
         public IActionResult AddScorecard()
         {
-            List<Golfer> golfers = _context.Golfers.ToList();
+           // List<Golfer> golfers = _context.Golfers.ToList();
 
-            return View(golfers);
+            //return View(golfers);
+            //todo - need to update handicap of golfer after scorecard is submitted
+
+            return View();
 
         }
         [HttpPost]
@@ -58,7 +59,8 @@ namespace FatherGolf.Controllers
            
             if (ModelState.IsValid)
             {
-                if (newGolfScorecard.CourseName != null && newGolfScorecard.PlayerName != null)
+                //todo - look of it. Going to use drop down list 
+                if (newGolfScorecard.CourseId != null && newGolfScorecard.PlayerId != null)
                 {
                     if (played == "18")
                     {
@@ -261,7 +263,8 @@ namespace FatherGolf.Controllers
                 found.FrontNinePar = Course.FrontNinePar;
                 found.BackNinePar = Course.BackNinePar;
                 found.Par = Course.Par;
-                found.Slope = Course.Par;
+                found.Slope = Course.Slope;
+                found.CourseRating = Course.CourseRating;
                 found.PhoneNumber = Course.PhoneNumber;
                 found.Address = Course.Address;
 
@@ -297,6 +300,67 @@ namespace FatherGolf.Controllers
             return players;
         }
 
+       //4.19.2021 - trying to calculate handicap
+        private float CalculateHandicapForCourse(int golferId, int courseId)
+        {
+            Golfer golfer = _context.Golfers.Find(golferId);
+            Course golfCourse = _context.Courses.Find(courseId);
+
+            float golferHandicap = (float)(golfer.Handicap * (golfCourse.Slope / 113) + (golfCourse.CourseRating + golfCourse.Par));
+
+            return golferHandicap;
+        }
+
+        private float CalculateHandicapDifferential(int score, int courseId)
+        {
+            float handicapDiff;
+            Course golfCourse = _context.Courses.Find(courseId);
+            handicapDiff = (float)((score - golfCourse.CourseRating) * 113 / golfCourse.Slope);
+
+            return handicapDiff;
+        }
+
+        private float SetGolferHandicap(int golferId)
+        {
+            float handicap = 0;
+            Golfer golfer = _context.Golfers.Find(golferId);
+            List<GolfScoreCard> golfScoreCards = _context.GolfScoreCards.ToList();
+            List<GolfScoreCard> theirScorecards = golfScoreCards.Where(c => c.PlayerId == golferId).ToList();
+            List < float> differientals = new List<float>();
+            //float[] differientals = new float[theirScorecards.Count];
+            for (int i = 0; i < theirScorecards.Count; i++)
+            {
+                float differential = CalculateHandicapDifferential((int)theirScorecards[i].Total, (int)theirScorecards[i].CourseId);
+                differientals.Add(differential);
+               // differientals[i] = differential;
+            }
+            differientals.Sort();
+            if (differientals.Count <= 10)
+            {
+                handicap = differientals.Min() * (float)0.96;
+            }
+            else if (differientals.Count > 10 && differientals.Count < 20)
+            {
+                float total = 0;
+                for (int i = 0; i < 5; i++)
+                {
+                    total += differientals[i];
+                }
+                handicap = (float)(total/5) * (float)0.96;
+            }
+            else
+            {
+                float total = 0;
+                for (int i = 0; i < 10; i++)
+                {
+                    total += differientals[i];
+                }
+                handicap = (float)(total / 10) * (float)0.96;
+            }
+            return handicap;
+        }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -304,3 +368,4 @@ namespace FatherGolf.Controllers
         }
     }
 }
+                                                                                                                     
