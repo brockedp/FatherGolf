@@ -12,5 +12,6 @@ namespace FatherGolf.Models
         public string Lastname { get; set; }
         public int? Handicap { get; set; }
         public string Totalrounds { get; set; }
+        public bool? Deleted { get; set; }
     }
 }

@@ -16,5 +16,6 @@ namespace FatherGolf.Models
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
         public double? CourseRating { get; set; }
+        public bool? Deleted { get; set; }
     }
 }

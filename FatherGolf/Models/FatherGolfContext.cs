@@ -47,20 +47,20 @@ namespace FatherGolf.Models
 
             modelBuilder.Entity<GolfScoreCard>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("GolfScoreCard");
 
                 entity.Property(e => e.Date).HasMaxLength(20);
 
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.Deleted).HasColumnName("DELETED");
             });
 
             modelBuilder.Entity<Golfer>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("Golfer");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Deleted).HasColumnName("DELETED");
 
                 entity.Property(e => e.Firstname)
                     .IsRequired()
@@ -68,10 +68,6 @@ namespace FatherGolf.Models
                     .HasColumnName("FIRSTNAME");
 
                 entity.Property(e => e.Handicap).HasColumnName("HANDICAP");
-
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("ID");
 
                 entity.Property(e => e.Lastname)
                     .IsRequired()

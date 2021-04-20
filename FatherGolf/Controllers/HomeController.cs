@@ -39,7 +39,16 @@ namespace FatherGolf.Controllers
         {
             List<GolfScoreCard> scorecards = new List<GolfScoreCard>();
             scorecards = _context.GolfScoreCards.ToList();
+            //4.20.2021 - Removing scorecard from list of they are set to deleted in the table
+            for (int i = 0; i < scorecards.Count; i++)
+            {
+                if ((bool)scorecards[i].Deleted)
+                {
+                    scorecards.RemoveAt(i);
+                    i--;
+                }
 
+            }
             return View(scorecards);
         }
 
@@ -123,7 +132,11 @@ namespace FatherGolf.Controllers
             GolfScoreCard found = _context.GolfScoreCards.Find(id);
             if (ModelState.IsValid && found != null)
             {
-                _context.Remove(found);
+                //4.20.2021 - setting delete to true instead of deleting from db
+                found.Deleted = true;
+                _context.Entry(found).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Update(found);
+                //_context.Remove(found);
                 _context.SaveChanges();
                 return RedirectToAction("DisplayAllRounds");
               //todo - associate player id with scorecard
@@ -140,7 +153,17 @@ namespace FatherGolf.Controllers
         {
             List<Golfer> golfers = new List<Golfer>();
             golfers = _context.Golfers.ToList();
+            //SetGolferHandicap(2);
+            //4.20.2021 - Removing golfer from list of they are set to deleted in the table
+            for (int i = 0; i < golfers.Count; i++)
+            {
+                if ((bool)golfers[i].Deleted)
+                {
+                    golfers.RemoveAt(i);
+                    i--;
+                }
 
+            }
             return View(golfers);
         }
 
@@ -185,8 +208,13 @@ namespace FatherGolf.Controllers
                 found.Id = golfer.Id;
                 found.Firstname = golfer.Firstname;
                 found.Lastname = golfer.Lastname;
-                found.Totalrounds = golfer.Totalrounds;
-                found.Handicap = golfer.Handicap;
+                
+                //4.20.2021 - using the new setup to set golfer handicap
+                //found.Totalrounds = golfer.Totalrounds;
+                //found.Handicap = golfer.Handicap;
+                float[] golferRounds = SetGolferHandicap(golfer.Id);
+                found.Handicap = (int)golferRounds[0];
+                found.Totalrounds = golferRounds[1].ToString();
 
                 _context.Entry(found).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 _context.Update(found);
@@ -200,11 +228,28 @@ namespace FatherGolf.Controllers
             Golfer found = _context.Golfers.Find(id);
             if (ModelState.IsValid && found != null)
             {
-                _context.Remove(found);
+                //4.20.2021 - Replacing delete with setting deleted to true
+                //_context.Remove(found);
+                found.Deleted = true;
+                _context.Entry(found).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Update(found);
                 _context.SaveChanges();
                 //todo - delete associated golf rounds as well
                 //todo - set golfer to deleted and round to deleted instead of deleting
             }
+            SetScorecardDeleted("golfer", found.Id);
+           //GolfScoreCard[] scorecards = _context.GolfScoreCards.ToArray();
+           // foreach (var scorecard in scorecards)
+           // {
+           //     if (scorecard.PlayerId == found.Id)
+           //     {
+           //         scorecard.Deleted = true;
+           //         _context.Entry(scorecard).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+           //         _context.Update(scorecard);
+           //         _context.SaveChanges();
+           //     }
+
+           // }
             return RedirectToAction("ViewGolfers");
 
         }
@@ -216,7 +261,16 @@ namespace FatherGolf.Controllers
         {
             List<Course> Courses = new List<Course>();
             Courses = _context.Courses.ToList();
+            //4.20.2021 - Removing courses from list of they are set to deleted in the table
+            for (int i = 0; i < Courses.Count; i++)
+            {
+                if ((bool)Courses[i].Deleted)
+                {
+                    Courses.RemoveAt(i);
+                    i--;
+                }
 
+            }
             return View(Courses);
         }
 
@@ -275,6 +329,23 @@ namespace FatherGolf.Controllers
             return RedirectToAction("ViewCourses");
         }
 
+        public IActionResult DeleteCourse(int id)
+        {
+            Course found = _context.Courses.Find(id);
+            if (ModelState.IsValid && found != null)
+            {
+                //4.20.2021 - Replacing delete with setting deleted to true
+                found.Deleted = true;
+                _context.Entry(found).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Update(found);
+                _context.SaveChanges();
+            }
+            //SetScorecardDeleted("golfer", found.Id);
+           
+            return RedirectToAction("ViewCourses");
+
+        }
+
 
         #endregion
         public IActionResult Privacy()
@@ -282,6 +353,21 @@ namespace FatherGolf.Controllers
             return View();
         }
 
+        private void SetScorecardDeleted(string type, int id)
+        {
+            GolfScoreCard[] scorecards = _context.GolfScoreCards.ToArray();
+            foreach (var scorecard in scorecards)
+            {
+                if ((scorecard.PlayerId == id && type == "golfer")|| (scorecard.CourseId == id && type == "scorecard"))
+                {
+                    scorecard.Deleted = true;
+                    _context.Entry(scorecard).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                    _context.Update(scorecard);
+                    _context.SaveChanges();
+                }
+
+            }
+        }
 
         public static HttpClient GetHttpClient()
         {
@@ -320,12 +406,12 @@ namespace FatherGolf.Controllers
             return handicapDiff;
         }
 
-        private float SetGolferHandicap(int golferId)
+        private float[] SetGolferHandicap(int golferId)
         {
-            float handicap = 0;
+            float[] golferRoundInfo = new float[2];
             Golfer golfer = _context.Golfers.Find(golferId);
             List<GolfScoreCard> golfScoreCards = _context.GolfScoreCards.ToList();
-            List<GolfScoreCard> theirScorecards = golfScoreCards.Where(c => c.PlayerId == golferId).ToList();
+            List<GolfScoreCard> theirScorecards = golfScoreCards.Where(c => c.PlayerId == golferId && c.Deleted == false).ToList();
             List < float> differientals = new List<float>();
             //float[] differientals = new float[theirScorecards.Count];
             for (int i = 0; i < theirScorecards.Count; i++)
@@ -335,9 +421,9 @@ namespace FatherGolf.Controllers
                // differientals[i] = differential;
             }
             differientals.Sort();
-            if (differientals.Count <= 10)
+            if (differientals.Count > 0 && differientals.Count <= 10)
             {
-                handicap = differientals.Min() * (float)0.96;
+                golferRoundInfo[0] = differientals.Min() * (float)0.96;
             }
             else if (differientals.Count > 10 && differientals.Count < 20)
             {
@@ -346,18 +432,23 @@ namespace FatherGolf.Controllers
                 {
                     total += differientals[i];
                 }
-                handicap = (float)(total/5) * (float)0.96;
+                golferRoundInfo[0] = (float)(total/5) * (float)0.96;
             }
-            else
-            {
+            else if (differientals.Count >= 20 )
+            {                                              
                 float total = 0;
                 for (int i = 0; i < 10; i++)
                 {
                     total += differientals[i];
                 }
-                handicap = (float)(total / 10) * (float)0.96;
+                golferRoundInfo[0] = (float)(total / 10) * (float)0.96;
             }
-            return handicap;
+            else
+            {
+                golferRoundInfo[0] = 0;
+            }
+            golferRoundInfo[1] = theirScorecards.Count;
+            return golferRoundInfo;
         }
 
 

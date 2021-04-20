@@ -7,6 +7,7 @@ namespace FatherGolf.Models
 {
     public class GolfRounds
     {
+        
         public int Id { get; set; }
         public string CourseName { get; set; }
         public int CourseId { get; set; }
