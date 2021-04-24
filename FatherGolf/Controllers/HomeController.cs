@@ -111,6 +111,7 @@ namespace FatherGolf.Controllers
                     }
 
                     newGolfScorecard.Date = DateTime.Now.ToShortDateString();
+                    newGolfScorecard.Deleted = false;
                     _context.Add(newGolfScorecard);
                     _context.SaveChanges();
                     return RedirectToAction("DisplayAllRounds");
@@ -177,6 +178,7 @@ namespace FatherGolf.Controllers
         {
             if (ModelState.IsValid)
             {
+                golfer.Deleted = false;
                 _context.Add(golfer);
                 _context.SaveChanges();
                 return RedirectToAction("ViewGolfers");
@@ -284,6 +286,7 @@ namespace FatherGolf.Controllers
         {
             if (ModelState.IsValid)
             {
+                Course.Deleted = false;
                 _context.Add(Course);
                 _context.SaveChanges();
                 return RedirectToAction("ViewCourses");
