@@ -31,5 +31,6 @@ namespace FatherGolf.Models
         public int? Total { get; set; }
         public string Date { get; set; }
         public bool? Deleted { get; set; }
+        public int? RoundLength { get; set; }
     }
 }

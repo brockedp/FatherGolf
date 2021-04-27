@@ -77,38 +77,39 @@ namespace FatherGolf.Controllers
                            newGolfScorecard.Hole5 + newGolfScorecard.Hole6 + newGolfScorecard.Hole7 + newGolfScorecard.Hole8 + newGolfScorecard.Hole9 +
                            newGolfScorecard.Hole10 + newGolfScorecard.Hole11 + newGolfScorecard.Hole12 + newGolfScorecard.Hole13 + newGolfScorecard.Hole14 +
                            newGolfScorecard.Hole15 + newGolfScorecard.Hole16 + newGolfScorecard.Hole17 + newGolfScorecard.Hole18;
+                        newGolfScorecard.RoundLength = 2;
                     }
-                    else
+                    else if (played == "F9")
                     {
-                        if (newGolfScorecard.Hole1 != null)
-                        {
-                            newGolfScorecard.Total = newGolfScorecard.Hole1 + newGolfScorecard.Hole2 + newGolfScorecard.Hole3 + newGolfScorecard.Hole4 +
-                          newGolfScorecard.Hole5 + newGolfScorecard.Hole6 + newGolfScorecard.Hole7 + newGolfScorecard.Hole8 + newGolfScorecard.Hole9;
-                            newGolfScorecard.Hole10 = 0;
-                            newGolfScorecard.Hole11 = 0;
-                            newGolfScorecard.Hole12 = 0;
-                            newGolfScorecard.Hole13 = 0;
-                            newGolfScorecard.Hole14 = 0;
-                            newGolfScorecard.Hole15 = 0;
-                            newGolfScorecard.Hole16 = 0;
-                            newGolfScorecard.Hole17 = 0;
-                            newGolfScorecard.Hole18 = 0;
-                        }
-                        else
-                        {
-                            newGolfScorecard.Total = newGolfScorecard.Hole10 + newGolfScorecard.Hole11 + newGolfScorecard.Hole12 + newGolfScorecard.Hole13 + newGolfScorecard.Hole14 +
-                        newGolfScorecard.Hole15 + newGolfScorecard.Hole16 + newGolfScorecard.Hole17 + newGolfScorecard.Hole18;
-                            newGolfScorecard.Hole1 = 0;
-                            newGolfScorecard.Hole2 = 0;
-                            newGolfScorecard.Hole3 = 0;
-                            newGolfScorecard.Hole4 = 0;
-                            newGolfScorecard.Hole5 = 0;
-                            newGolfScorecard.Hole6 = 0;
-                            newGolfScorecard.Hole7 = 0;
-                            newGolfScorecard.Hole8 = 0;
-                            newGolfScorecard.Hole9 = 0;
-                        }
+                        newGolfScorecard.Total = newGolfScorecard.Hole1 + newGolfScorecard.Hole2 + newGolfScorecard.Hole3 + newGolfScorecard.Hole4 +
+                      newGolfScorecard.Hole5 + newGolfScorecard.Hole6 + newGolfScorecard.Hole7 + newGolfScorecard.Hole8 + newGolfScorecard.Hole9;
+                        newGolfScorecard.Hole10 = 0;
+                        newGolfScorecard.Hole11 = 0;
+                        newGolfScorecard.Hole12 = 0;
+                        newGolfScorecard.Hole13 = 0;
+                        newGolfScorecard.Hole14 = 0;
+                        newGolfScorecard.Hole15 = 0;
+                        newGolfScorecard.Hole16 = 0;
+                        newGolfScorecard.Hole17 = 0;
+                        newGolfScorecard.Hole18 = 0;
+                        newGolfScorecard.RoundLength = 0;
                     }
+                    else if (played == "B9")
+                    {
+                        newGolfScorecard.Total = newGolfScorecard.Hole10 + newGolfScorecard.Hole11 + newGolfScorecard.Hole12 + newGolfScorecard.Hole13 + newGolfScorecard.Hole14 +
+                       newGolfScorecard.Hole15 + newGolfScorecard.Hole16 + newGolfScorecard.Hole17 + newGolfScorecard.Hole18;
+                        newGolfScorecard.Hole1 = 0;
+                        newGolfScorecard.Hole2 = 0;
+                        newGolfScorecard.Hole3 = 0;
+                        newGolfScorecard.Hole4 = 0;
+                        newGolfScorecard.Hole5 = 0;
+                        newGolfScorecard.Hole6 = 0;
+                        newGolfScorecard.Hole7 = 0;
+                        newGolfScorecard.Hole8 = 0;
+                        newGolfScorecard.Hole9 = 0;
+                        newGolfScorecard.RoundLength = 1;
+                    }
+                    
 
                     newGolfScorecard.Date = DateTime.Now.ToShortDateString();
                     newGolfScorecard.Deleted = false;
@@ -165,6 +166,7 @@ namespace FatherGolf.Controllers
                 }
 
             }
+
             return View(golfers);
         }
 
@@ -372,6 +374,13 @@ namespace FatherGolf.Controllers
             }
         }
 
+        public static HttpClient GetWeatherHttpClient()
+        {
+            var client = new HttpClient();
+            // httpClient.BaseAddress = new Uri("https://www.themealdb.com");
+            client.BaseAddress = new Uri("api.openweathermap.org");
+            return client;
+        }
         public static HttpClient GetHttpClient()
         {
             var client = new HttpClient();
@@ -400,11 +409,18 @@ namespace FatherGolf.Controllers
             return golferHandicap;
         }
 
-        private float CalculateHandicapDifferential(int score, int courseId)
+        private float CalculateHandicapDifferential(int score, int courseId, int roundLength)
         {
             float handicapDiff;
             Course golfCourse = _context.Courses.Find(courseId);
-            handicapDiff = (float)((score - golfCourse.CourseRating) * 113 / golfCourse.Slope);
+            if (roundLength == 2)
+            {
+                handicapDiff = (float)((score - golfCourse.CourseRating) * 113 / golfCourse.Slope);
+            }
+            else
+            {
+                handicapDiff = (float)((score - (golfCourse.CourseRating/2)) * 113 / golfCourse.Slope);
+            }
 
             return handicapDiff;
         }
@@ -419,7 +435,7 @@ namespace FatherGolf.Controllers
             //float[] differientals = new float[theirScorecards.Count];
             for (int i = 0; i < theirScorecards.Count; i++)
             {
-                float differential = CalculateHandicapDifferential((int)theirScorecards[i].Total, (int)theirScorecards[i].CourseId);
+                float differential = CalculateHandicapDifferential((int)theirScorecards[i].Total, (int)theirScorecards[i].CourseId, (int)theirScorecards[i].RoundLength);
                 differientals.Add(differential);
                // differientals[i] = differential;
             }
