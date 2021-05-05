@@ -12,7 +12,7 @@ namespace FatherGolf.Models
         public string CourseName { get; set; }
         public int CourseId { get; set; }
         public string PlayerName { get; set; }
-        public string PlayerId{ get; set; }
+        public int PlayerId{ get; set; }
         public int? Hole1 { get; set; }
         public int? Hole2 { get; set; }
         public int? Hole3 { get; set; }

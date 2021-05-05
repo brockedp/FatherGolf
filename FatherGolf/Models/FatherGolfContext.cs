@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using FatherGolf.Models;
 
 #nullable disable
 
@@ -83,5 +84,7 @@ namespace FatherGolf.Models
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public DbSet<FatherGolf.Models.GolfRounds> GolfRounds { get; set; }
     }
 }

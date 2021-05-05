@@ -35,6 +35,53 @@ namespace FatherGolf.Controllers
 
 
         #region Scorecard
+
+        public IActionResult GolfRoundsView()
+        {
+            List<GolfScoreCard> scorecards = new List<GolfScoreCard>();
+            scorecards = _context.GolfScoreCards.ToList();
+            //4.20.2021 - Removing scorecard from list of they are set to deleted in the table
+            for (int i = 0; i < scorecards.Count; i++)
+            {
+                if ((bool)scorecards[i].Deleted)
+                {
+                    scorecards.RemoveAt(i);
+                    i--;
+                }
+            }
+            var golfers = _context.Golfers.ToList();
+            var courses = _context.Courses.ToList();
+            List<GolfRounds> golfRounds = new List<GolfRounds>();
+            foreach (var card in scorecards)
+            {
+                GolfRounds golfRound = new GolfRounds();
+                golfRound.CourseId = (int)card.CourseId;
+                golfRound.PlayerId = (int)card.PlayerId;
+                golfRound.Hole1 = card.Hole1;
+                golfRound.Hole2 = card.Hole2;
+                golfRound.Hole3 = card.Hole3;
+                golfRound.Hole4 = card.Hole4;
+                golfRound.Hole5 = card.Hole5;
+                golfRound.Hole6 = card.Hole6;
+                golfRound.Hole7 = card.Hole7;
+                golfRound.Hole8 = card.Hole8;
+                golfRound.Hole9 = card.Hole9;
+                golfRound.Hole10 = card.Hole10;
+                golfRound.Hole11 = card.Hole11;
+                golfRound.Hole12 = card.Hole12;
+                golfRound.Hole13 = card.Hole13;
+                golfRound.Hole14 = card.Hole14;
+                golfRound.Hole15 = card.Hole15;
+                golfRound.Hole16 = card.Hole16;
+                golfRound.Hole17 = card.Hole17;
+                golfRound.Hole18 = card.Hole18;
+                golfRound.Total = card.Total;
+                golfRound.PlayerName = golfers.First(g => g.Id == (int)card.PlayerId).Firstname + " " + golfers.First(g => g.Id == (int)card.PlayerId).Lastname;
+                golfRound.CourseName = courses.First(c => c.Id == (int)card.CourseId).Name;
+                golfRounds.Add(golfRound);
+            }
+            return View(golfRounds);
+        }
         public IActionResult DisplayAllRounds()
         {
             List<GolfScoreCard> scorecards = new List<GolfScoreCard>();
@@ -115,7 +162,8 @@ namespace FatherGolf.Controllers
                     newGolfScorecard.Deleted = false;
                     _context.Add(newGolfScorecard);
                     _context.SaveChanges();
-                    return RedirectToAction("DisplayAllRounds");
+                   // return RedirectToAction("DisplayAllRounds");
+                    return RedirectToAction("GolfRoundsView");
                 }
                 else
                 {
@@ -242,20 +290,74 @@ namespace FatherGolf.Controllers
                 //todo - set golfer to deleted and round to deleted instead of deleting
             }
             SetScorecardDeleted("golfer", found.Id);
-           //GolfScoreCard[] scorecards = _context.GolfScoreCards.ToArray();
-           // foreach (var scorecard in scorecards)
-           // {
-           //     if (scorecard.PlayerId == found.Id)
-           //     {
-           //         scorecard.Deleted = true;
-           //         _context.Entry(scorecard).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-           //         _context.Update(scorecard);
-           //         _context.SaveChanges();
-           //     }
-
-           // }
+        
             return RedirectToAction("ViewGolfers");
 
+        }
+
+        public IActionResult GolferDetails(int id)
+        {
+            Golfer found = _context.Golfers.Find(id);
+            if (ModelState.IsValid && found != null)
+            {
+                return View(found);
+            }
+            else
+            {
+                return RedirectToAction("ViewGolfers");
+            }
+        }
+        public IActionResult GolferScorecardsView(int id)
+        {
+            Golfer found = _context.Golfers.Find(id);
+            List<GolfScoreCard> scorecards = new List<GolfScoreCard>();
+            scorecards = _context.GolfScoreCards.ToList();
+            //4.20.2021 - Removing scorecard from list of they are set to deleted in the table
+            for (int i = 0; i < scorecards.Count; i++)
+            {
+                if ((bool)scorecards[i].Deleted)
+                {
+                    scorecards.RemoveAt(i);
+                    i--;
+                }
+            }
+            //var golfers = _context.Golfers.ToList();
+            var courses = _context.Courses.ToList();
+            List<GolfRounds> golfRounds = new List<GolfRounds>();
+            foreach (var card in scorecards)
+            {
+                if (card.PlayerId == found.Id)
+                {
+                    GolfRounds golfRound = new GolfRounds();
+                    golfRound.CourseId = (int)card.CourseId;
+                    golfRound.PlayerId = found.Id;
+                    golfRound.Hole1 = card.Hole1;
+                    golfRound.Hole2 = card.Hole2;
+                    golfRound.Hole3 = card.Hole3;
+                    golfRound.Hole4 = card.Hole4;
+                    golfRound.Hole5 = card.Hole5;
+                    golfRound.Hole6 = card.Hole6;
+                    golfRound.Hole7 = card.Hole7;
+                    golfRound.Hole8 = card.Hole8;
+                    golfRound.Hole9 = card.Hole9;
+                    golfRound.Hole10 = card.Hole10;
+                    golfRound.Hole11 = card.Hole11;
+                    golfRound.Hole12 = card.Hole12;
+                    golfRound.Hole13 = card.Hole13;
+                    golfRound.Hole14 = card.Hole14;
+                    golfRound.Hole15 = card.Hole15;
+                    golfRound.Hole16 = card.Hole16;
+                    golfRound.Hole17 = card.Hole17;
+                    golfRound.Hole18 = card.Hole18;
+                    golfRound.Total = card.Total;
+                    golfRound.PlayerName = $"{found.Firstname} {found.Lastname}";
+                    golfRound.CourseName = courses.First(c => c.Id == (int)card.CourseId).Name;
+                    golfRounds.Add(golfRound);
+                }
+
+            }
+            ViewBag.PlayerName = $"{found.Firstname} {found.Lastname}'s Scorecards"; 
+            return View(golfRounds);
         }
 
         #endregion
@@ -374,7 +476,7 @@ namespace FatherGolf.Controllers
             }
         }
 
-        public static HttpClient GetWeatherHttpClient()
+       public static HttpClient GetWeatherHttpClient()
         {
             var client = new HttpClient();
             // httpClient.BaseAddress = new Uri("https://www.themealdb.com");
