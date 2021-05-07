@@ -162,3 +162,4 @@ C:\Users\denob\Documents\FatherGolf\FatherGolf\obj\Debug\netcoreapp3.1\Razor\Vie
 C:\Users\denob\Documents\FatherGolf\FatherGolf\obj\Debug\netcoreapp3.1\Razor\Views\Home\GolfRoundsView.cshtml.g.cs
 C:\Users\denob\Documents\FatherGolf\FatherGolf\obj\Debug\netcoreapp3.1\Razor\Views\Home\GolferDetails.cshtml.g.cs
 C:\Users\denob\Documents\FatherGolf\FatherGolf\obj\Debug\netcoreapp3.1\Razor\Views\Home\GolferScorecardsView.cshtml.g.cs
+C:\Users\denob\Documents\FatherGolf\FatherGolf\obj\Debug\netcoreapp3.1\Razor\Views\Home\EditScorecardView.cshtml.g.cs

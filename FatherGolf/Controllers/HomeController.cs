@@ -55,6 +55,7 @@ namespace FatherGolf.Controllers
             foreach (var card in scorecards)
             {
                 GolfRounds golfRound = new GolfRounds();
+                golfRound.Id = card.Id;
                 golfRound.CourseId = (int)card.CourseId;
                 golfRound.PlayerId = (int)card.PlayerId;
                 golfRound.Hole1 = card.Hole1;
@@ -78,6 +79,7 @@ namespace FatherGolf.Controllers
                 golfRound.Total = card.Total;
                 golfRound.PlayerName = golfers.First(g => g.Id == (int)card.PlayerId).Firstname + " " + golfers.First(g => g.Id == (int)card.PlayerId).Lastname;
                 golfRound.CourseName = courses.First(c => c.Id == (int)card.CourseId).Name;
+                golfRound.Date = card.Date;
                 golfRounds.Add(golfRound);
             }
             return View(golfRounds);
@@ -329,6 +331,7 @@ namespace FatherGolf.Controllers
                 if (card.PlayerId == found.Id)
                 {
                     GolfRounds golfRound = new GolfRounds();
+                    golfRound.Id = card.Id;
                     golfRound.CourseId = (int)card.CourseId;
                     golfRound.PlayerId = found.Id;
                     golfRound.Hole1 = card.Hole1;
@@ -358,6 +361,76 @@ namespace FatherGolf.Controllers
             }
             ViewBag.PlayerName = $"{found.Firstname} {found.Lastname}'s Scorecards"; 
             return View(golfRounds);
+        }
+
+        public IActionResult EditScorecardView(int id)
+        {
+            GolfScoreCard found = _context.GolfScoreCards.Find(id);
+            if (found != null)
+            {
+                return View(found);
+            }
+            else
+            {
+                return RedirectToAction("GolfScorecardsView");
+            }
+        }
+        [HttpPost]
+        public IActionResult EditScorecardView(GolfScoreCard scorecard)
+        {
+            GolfScoreCard found = _context.GolfScoreCards.Find(scorecard.Id);
+            if (ModelState.IsValid && found != null)
+            {
+                found.CourseId = scorecard.CourseId;
+                found.PlayerId = scorecard.PlayerId;
+                found.Hole1 = scorecard.Hole1;
+                found.Hole2 = scorecard.Hole2;
+                found.Hole3 = scorecard.Hole3;
+                found.Hole3 = scorecard.Hole3;
+                found.Hole5 = scorecard.Hole5;
+                found.Hole6 = scorecard.Hole6;
+                found.Hole7 = scorecard.Hole7;
+                found.Hole8 = scorecard.Hole8;
+                found.Hole9 = scorecard.Hole9;
+                found.Hole10 = scorecard.Hole11;
+                found.Hole11 = scorecard.Hole11;
+                found.Hole12 = scorecard.Hole12;
+                found.Hole13 = scorecard.Hole13;
+                found.Hole13 = scorecard.Hole13;
+                found.Hole15 = scorecard.Hole15;
+                found.Hole16 = scorecard.Hole16;
+                found.Hole17 = scorecard.Hole17;
+                found.Hole18 = scorecard.Hole18;
+
+                if (found.RoundLength == 2)
+                {
+                    found.Total = scorecard.Hole1 + scorecard.Hole2 + scorecard.Hole3 + scorecard.Hole4 +
+                       scorecard.Hole5 + scorecard.Hole6 + scorecard.Hole7 + scorecard.Hole8 + scorecard.Hole9 +
+                       scorecard.Hole10 + scorecard.Hole11 + scorecard.Hole12 + scorecard.Hole13 + scorecard.Hole14 +
+                       scorecard.Hole15 + scorecard.Hole16 + scorecard.Hole17 + scorecard.Hole18;
+
+                }
+                else if (found.RoundLength == 0)
+                {
+                    found.Total = scorecard.Hole1 + scorecard.Hole2 + scorecard.Hole3 + scorecard.Hole4 +
+                  scorecard.Hole5 + scorecard.Hole6 + scorecard.Hole7 + scorecard.Hole8 + scorecard.Hole9;
+                   
+
+                }
+                else if (found.RoundLength == 1)
+                {
+                    found.Total = scorecard.Hole10 + scorecard.Hole11 + scorecard.Hole12 + scorecard.Hole13 + scorecard.Hole14 +
+                   scorecard.Hole15 + scorecard.Hole16 + scorecard.Hole17 + scorecard.Hole18;
+                    
+
+                }
+
+                
+                _context.Entry(found).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Update(found);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("GolfRoundsView");
         }
 
         #endregion
