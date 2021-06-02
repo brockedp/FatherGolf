@@ -18,6 +18,7 @@ namespace FatherGolf.Controllers
         //{
         //  //  _logger = logger;
         //}
+        public const string API_KEY = "not here";
 
         private readonly FatherGolfContext _context;
         public HomeController(FatherGolfContext context)
@@ -29,7 +30,11 @@ namespace FatherGolf.Controllers
         public IActionResult Index()
         {
             var theGripper = GetTeam().Result;
-
+            var sweetWeather = GetWeather().Result;
+            var thisIsWeather = sweetWeather.main.temp.ToString();
+            //thisIsWeather = thisIsWeather
+            double temp = ConvertKelvinToF(double.Parse(thisIsWeather));
+            temp = Math.Round(temp, 1);
             return View(theGripper);
         }
 
@@ -549,12 +554,25 @@ namespace FatherGolf.Controllers
             }
         }
 
+        public double ConvertKelvinToF(double kelvinTemp)
+        {
+            return ((kelvinTemp - 273.15) * 1.8) + 32;
+        }
+
        public static HttpClient GetWeatherHttpClient()
         {
             var client = new HttpClient();
             // httpClient.BaseAddress = new Uri("https://www.themealdb.com");
-            client.BaseAddress = new Uri("api.openweathermap.org");
+            client.BaseAddress = new Uri("https://api.openweathermap.org");
             return client;
+        }
+        public async Task<dynamic> GetWeather()
+        {
+            var client = GetWeatherHttpClient();
+           // var response = await client.GetAsync($"data/2.5/forecast?q=Detroit,us&APPID={API_KEY}");
+            var response = await client.GetAsync($"data/2.5/weather?q=Detroit,us&APPID={API_KEY}");
+            var weather = await response.Content.ReadAsAsync<dynamic>();
+            return weather;
         }
         public static HttpClient GetHttpClient()
         {
