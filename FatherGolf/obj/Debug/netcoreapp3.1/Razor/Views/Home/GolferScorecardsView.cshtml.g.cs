@@ -28,7 +28,7 @@ using FatherGolf.Models;
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"6672b5a30df07cab3dbad86c4117849931413753", @"/Views/Home/GolferScorecardsView.cshtml")]
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"b2d26deb39372f39ec8deba74109f7111d7b0ffc", @"/Views/_ViewImports.cshtml")]
-    public class Views_Home_GolferScorecardsView : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<IEnumerable<FatherGolf.Models.GolfRounds>>
+    public class Views_Home_GolferScorecardsView : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<IEnumerable<FatherGolf.ViewModels.GolfRounds>>
     {
         private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute("asp-action", "AddScorecard", global::Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle.DoubleQuotes);
         private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_1 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute("asp-action", "UpdateScorecard", global::Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle.DoubleQuotes);
@@ -519,7 +519,7 @@ Write(ViewBag.PlayerName);
         [global::Microsoft.AspNetCore.Mvc.Razor.Internal.RazorInjectAttribute]
         public global::Microsoft.AspNetCore.Mvc.Rendering.IJsonHelper Json { get; private set; }
         [global::Microsoft.AspNetCore.Mvc.Razor.Internal.RazorInjectAttribute]
-        public global::Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper<IEnumerable<FatherGolf.Models.GolfRounds>> Html { get; private set; }
+        public global::Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper<IEnumerable<FatherGolf.ViewModels.GolfRounds>> Html { get; private set; }
     }
 }
 #pragma warning restore 1591

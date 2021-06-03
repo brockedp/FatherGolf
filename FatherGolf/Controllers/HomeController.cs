@@ -1,5 +1,7 @@
 ﻿using FatherGolf.Models;
+using FatherGolf.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -19,11 +21,15 @@ namespace FatherGolf.Controllers
         //  //  _logger = logger;
         //}
         public const string API_KEY = "not here";
+        private readonly string _apiKey;
+        private readonly IConfiguration _configuration;
 
         private readonly FatherGolfContext _context;
-        public HomeController(FatherGolfContext context)
+        public HomeController(FatherGolfContext context, IConfiguration configuration )
         {
             _context = context;
+            _configuration = configuration;
+            _apiKey = _configuration.GetSection("AppConfiguration")["WeatherAPIKey"];
 
         }
 
@@ -204,6 +210,76 @@ namespace FatherGolf.Controllers
                 return RedirectToAction("DisplayAllRounds");
             }
         }
+
+        public IActionResult EditScorecardView(int id)
+        {
+            GolfScoreCard found = _context.GolfScoreCards.Find(id);
+            if (found != null)
+            {
+                return View(found);
+            }
+            else
+            {
+                return RedirectToAction("GolfScorecardsView");
+            }
+        }
+        [HttpPost]
+        public IActionResult EditScorecardView(GolfScoreCard scorecard)
+        {
+            GolfScoreCard found = _context.GolfScoreCards.Find(scorecard.Id);
+            if (ModelState.IsValid && found != null)
+            {
+                found.CourseId = scorecard.CourseId;
+                found.PlayerId = scorecard.PlayerId;
+                found.Hole1 = scorecard.Hole1;
+                found.Hole2 = scorecard.Hole2;
+                found.Hole3 = scorecard.Hole3;
+                found.Hole3 = scorecard.Hole3;
+                found.Hole5 = scorecard.Hole5;
+                found.Hole6 = scorecard.Hole6;
+                found.Hole7 = scorecard.Hole7;
+                found.Hole8 = scorecard.Hole8;
+                found.Hole9 = scorecard.Hole9;
+                found.Hole10 = scorecard.Hole11;
+                found.Hole11 = scorecard.Hole11;
+                found.Hole12 = scorecard.Hole12;
+                found.Hole13 = scorecard.Hole13;
+                found.Hole13 = scorecard.Hole13;
+                found.Hole15 = scorecard.Hole15;
+                found.Hole16 = scorecard.Hole16;
+                found.Hole17 = scorecard.Hole17;
+                found.Hole18 = scorecard.Hole18;
+
+                if (found.RoundLength == 2)
+                {
+                    found.Total = scorecard.Hole1 + scorecard.Hole2 + scorecard.Hole3 + scorecard.Hole4 +
+                       scorecard.Hole5 + scorecard.Hole6 + scorecard.Hole7 + scorecard.Hole8 + scorecard.Hole9 +
+                       scorecard.Hole10 + scorecard.Hole11 + scorecard.Hole12 + scorecard.Hole13 + scorecard.Hole14 +
+                       scorecard.Hole15 + scorecard.Hole16 + scorecard.Hole17 + scorecard.Hole18;
+
+                }
+                else if (found.RoundLength == 0)
+                {
+                    found.Total = scorecard.Hole1 + scorecard.Hole2 + scorecard.Hole3 + scorecard.Hole4 +
+                  scorecard.Hole5 + scorecard.Hole6 + scorecard.Hole7 + scorecard.Hole8 + scorecard.Hole9;
+
+
+                }
+                else if (found.RoundLength == 1)
+                {
+                    found.Total = scorecard.Hole10 + scorecard.Hole11 + scorecard.Hole12 + scorecard.Hole13 + scorecard.Hole14 +
+                   scorecard.Hole15 + scorecard.Hole16 + scorecard.Hole17 + scorecard.Hole18;
+
+
+                }
+
+
+                _context.Entry(found).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                _context.Update(found);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("GolfRoundsView");
+        }
         #endregion
         #region Golfer
         public IActionResult ViewGolfers()
@@ -368,75 +444,7 @@ namespace FatherGolf.Controllers
             return View(golfRounds);
         }
 
-        public IActionResult EditScorecardView(int id)
-        {
-            GolfScoreCard found = _context.GolfScoreCards.Find(id);
-            if (found != null)
-            {
-                return View(found);
-            }
-            else
-            {
-                return RedirectToAction("GolfScorecardsView");
-            }
-        }
-        [HttpPost]
-        public IActionResult EditScorecardView(GolfScoreCard scorecard)
-        {
-            GolfScoreCard found = _context.GolfScoreCards.Find(scorecard.Id);
-            if (ModelState.IsValid && found != null)
-            {
-                found.CourseId = scorecard.CourseId;
-                found.PlayerId = scorecard.PlayerId;
-                found.Hole1 = scorecard.Hole1;
-                found.Hole2 = scorecard.Hole2;
-                found.Hole3 = scorecard.Hole3;
-                found.Hole3 = scorecard.Hole3;
-                found.Hole5 = scorecard.Hole5;
-                found.Hole6 = scorecard.Hole6;
-                found.Hole7 = scorecard.Hole7;
-                found.Hole8 = scorecard.Hole8;
-                found.Hole9 = scorecard.Hole9;
-                found.Hole10 = scorecard.Hole11;
-                found.Hole11 = scorecard.Hole11;
-                found.Hole12 = scorecard.Hole12;
-                found.Hole13 = scorecard.Hole13;
-                found.Hole13 = scorecard.Hole13;
-                found.Hole15 = scorecard.Hole15;
-                found.Hole16 = scorecard.Hole16;
-                found.Hole17 = scorecard.Hole17;
-                found.Hole18 = scorecard.Hole18;
-
-                if (found.RoundLength == 2)
-                {
-                    found.Total = scorecard.Hole1 + scorecard.Hole2 + scorecard.Hole3 + scorecard.Hole4 +
-                       scorecard.Hole5 + scorecard.Hole6 + scorecard.Hole7 + scorecard.Hole8 + scorecard.Hole9 +
-                       scorecard.Hole10 + scorecard.Hole11 + scorecard.Hole12 + scorecard.Hole13 + scorecard.Hole14 +
-                       scorecard.Hole15 + scorecard.Hole16 + scorecard.Hole17 + scorecard.Hole18;
-
-                }
-                else if (found.RoundLength == 0)
-                {
-                    found.Total = scorecard.Hole1 + scorecard.Hole2 + scorecard.Hole3 + scorecard.Hole4 +
-                  scorecard.Hole5 + scorecard.Hole6 + scorecard.Hole7 + scorecard.Hole8 + scorecard.Hole9;
-                   
-
-                }
-                else if (found.RoundLength == 1)
-                {
-                    found.Total = scorecard.Hole10 + scorecard.Hole11 + scorecard.Hole12 + scorecard.Hole13 + scorecard.Hole14 +
-                   scorecard.Hole15 + scorecard.Hole16 + scorecard.Hole17 + scorecard.Hole18;
-                    
-
-                }
-
-                
-                _context.Entry(found).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                _context.Update(found);
-                _context.SaveChanges();
-            }
-            return RedirectToAction("GolfRoundsView");
-        }
+     
 
         #endregion
         #region Course
@@ -570,7 +578,7 @@ namespace FatherGolf.Controllers
         {
             var client = GetWeatherHttpClient();
            // var response = await client.GetAsync($"data/2.5/forecast?q=Detroit,us&APPID={API_KEY}");
-            var response = await client.GetAsync($"data/2.5/weather?q=Detroit,us&APPID={API_KEY}");
+            var response = await client.GetAsync($"data/2.5/weather?q=Detroit,us&APPID={_apiKey}");
             var weather = await response.Content.ReadAsAsync<dynamic>();
             return weather;
         }

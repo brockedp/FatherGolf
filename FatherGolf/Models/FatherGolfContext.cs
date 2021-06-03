@@ -85,6 +85,6 @@ namespace FatherGolf.Models
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
-        public DbSet<FatherGolf.Models.GolfRounds> GolfRounds { get; set; }
+        //public DbSet<FatherGolf.Models.GolfRounds> GolfRounds { get; set; }
     }
 }
